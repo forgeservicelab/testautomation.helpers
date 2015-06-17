@@ -1,0 +1,31 @@
+*** Settings ***
+Suite Setup    Go to homepage
+#Suite Teardown    Log Out and Close Browsers
+Resource    ./common/assets/secrets.txt
+Resource    ./common/assets/resource.txt
+Resource    local_resource.txt
+
+*** Variables ***
+${USER}    ${VALID_USER}
+${PASSWORD}    ${VALID_PASSWORD}
+${TO}    ${TO_XMPP}
+
+*** Test Cases ***
+Auth LOGIN OK
+    Set Log Level    NONE
+    login Auth    ${USER}      ${PASSWORD}    You are currently logged in as ${USER}
+    Set Log Level    DEBUG
+Redmine Administration
+    :FOR    ${INDEX}    IN RANGE    1   101
+    \    ${RES} =     Evaluate    305+${INDEX}       
+    \    Go to    ${REDMINE_URL}/users/${RES}/edit
+    \    Input Text    id=user_login    testii${INDEX}
+    \    Input Text    id=user_firstname    testii${INDEX}
+    \    Input Text    id=user_lastname    testii${INDEX}
+    \    Input Text    id=user_mail    name.surname+${INDEX}@digile.fi
+    \    Input Text    id=user_password    testtest
+    \    Input Text    id=user_password_confirmation    testtest
+    \    Click Element    name=commit
+    
+
+*** Keywords ***
